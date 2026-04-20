@@ -21,8 +21,8 @@ class PaymentController extends Controller
         $token = env('PAYDUNYA_TOKEN');
         $mode = env('PAYDUNYA_MODE', 'test');
 
-        $baseUrl = $mode === 'live' 
-            ? 'https://app.paydunya.com/api/v1/checkout-invoice/create' 
+        $baseUrl = $mode === 'live'
+            ? 'https://app.paydunya.com/api/v1/checkout-invoice/create'
             : 'https://app.paydunya.com/sandbox-api/v1/checkout-invoice/create';
 
         $payload = [
@@ -48,6 +48,10 @@ class PaymentController extends Controller
                     'amount' => $request->montant
                 ]),
                 'callback_url' => route('payment.ipn')
+            ],
+            'customer' => [
+                'name' => "Client ID: " . $request->identifiant,
+                'email' => "ouerahim456@gmail.com", // Email générique pour éviter que PayDunya ne le demande
             ]
         ];
 
@@ -87,7 +91,7 @@ class PaymentController extends Controller
         $amount = $request->query('amount');
 
         // Logic to verify payment status with PayDunya would go here (Confirm Invoice)
-        
+
         // Notify via WhatsApp
         $this->sendWhatsAppNotification($id, $amount);
 
@@ -101,14 +105,14 @@ class PaymentController extends Controller
     private function sendWhatsAppNotification($id, $amount)
     {
         $adminNumber = env('WHATSAPP_ADMIN_NUMBER', '+22670000000');
-        $instanceId  = env('WHATSAPP_INSTANCE_ID');
-        $token       = env('WHATSAPP_TOKEN');
-        
+        $instanceId = env('WHATSAPP_INSTANCE_ID');
+        $token = env('WHATSAPP_TOKEN');
+
         $message = "🔔 *Nouvelle Demande de Recharge*\n\n"
-                 . "👤 *ID 1xBet:* $id\n"
-                 . "💰 *Montant:* $amount CFA\n"
-                 . "✅ *Statut:* Payé via PayDunya\n\n"
-                 . "Merci de traiter cette demande rapidement.";
+            . "👤 *ID 1xBet:* $id\n"
+            . "💰 *Montant:* $amount CFA\n"
+            . "✅ *Statut:* Payé via le site Vackess cash\n\n"
+            . "Merci de traiter cette demande rapidement.";
 
         if ($instanceId && $token) {
             $apiUrl = "https://api.ultramsg.com/{$instanceId}/messages/chat";
@@ -116,8 +120,8 @@ class PaymentController extends Controller
             try {
                 $response = Http::asForm()->post($apiUrl, [
                     'token' => $token,
-                    'to'    => $adminNumber,
-                    'body'  => $message,
+                    'to' => $adminNumber,
+                    'body' => $message,
                 ]);
 
                 if (!$response->successful()) {
@@ -137,7 +141,7 @@ class PaymentController extends Controller
 
         // Assurez-vous que l'IPN vient de PayDunya (vous devriez valider le hash cryptographique ici si PayDunya en fournit un)
         $status = $request->input('status');
-        
+
         if ($status === 'completed') {
             $amount = $request->input('invoice.total_amount');
             $customId = $request->input('invoice.items.item_0.name', 'Inconnu'); // Astuce temporaire pour récupérer l'ID
@@ -149,12 +153,12 @@ class PaymentController extends Controller
             // Calcul du transfert (Retrait des 2.5% de PayDunya et 1% pour l'appli)
             $paydunyaFee = 0.025;
             $appFee = 0.01;
-            
+
             $netAmount = $amount - ($amount * $paydunyaFee) - ($amount * $appFee);
             $netAmountToTransfer = floor($netAmount);
 
             // Numéro du fournisseur (Ex: le grossiste ou récepteur du fond)
-            $fournisseurPhoneNumber = env('FOURNISSEUR_NUMBER', '22600000000'); 
+            $fournisseurPhoneNumber = env('FOURNISSEUR_NUMBER', '22600000000');
 
             Log::info("Distribution: Total=$amount, FraisAppli=" . ($amount * $appFee) . ", MontantATransférer=$netAmountToTransfer vers $fournisseurPhoneNumber");
 
@@ -173,9 +177,9 @@ class PaymentController extends Controller
         $mode = env('PAYDUNYA_MODE', 'test');
 
         // URL API Disburse de PayDunya
-        $baseUrl = $mode === 'live' 
-            ? 'https://app.paydunya.com/api/v1/disburse/get-invoice' 
-            : 'https://app.paydunya.com/sandbox-api/v1/disburse/get-invoice'; 
+        $baseUrl = $mode === 'live'
+            ? 'https://app.paydunya.com/api/v1/disburse/get-invoice'
+            : 'https://app.paydunya.com/sandbox-api/v1/disburse/get-invoice';
 
         $payload = [
             'account_alias' => $accountAlias,
