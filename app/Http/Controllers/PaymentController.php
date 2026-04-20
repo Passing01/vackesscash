@@ -50,7 +50,7 @@ class PaymentController extends Controller
                 'callback_url' => route('payment.ipn')
             ],
             'customer' => [
-                'name' => "Client ID: " . $request->identifiant,
+                'name' => "Vackess Cash",
                 'email' => "ouerahim456@gmail.com", // Email générique pour éviter que PayDunya ne le demande
             ]
         ];
