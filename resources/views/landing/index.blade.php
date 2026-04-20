@@ -102,7 +102,7 @@
                     <div class="col-lg-6">
                         <div class="video-container position-relative rounded-4 overflow-hidden border border-primary border-4 shadow-lg"
                             data-aos="fade-left" data-aos-delay="200" data-aos-duration="1000">
-                            <video class="w-100 shadow-sm" controls
+                            <video class="w-100 shadow-sm" controls playsinline preload="metadata"
                                 poster="{{ asset('assets/images/vackess/vackess1.jpeg') }}">
                                 <source src="{{ asset('assets/images/vackess/vackess5.mp4') }}" type="video/mp4">
                                 Votre navigateur ne supporte pas la lecture de vidéos.
