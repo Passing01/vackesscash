@@ -40,7 +40,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-dark w-100 py-3 rounded-pill hstack justify-content-center gap-2 mt-2">
+                            <button type="submit" class="btn btn-dark text-white fw-bold w-100 py-3 rounded-pill hstack justify-content-center gap-2 mt-2">
                                 <span class="btn-text">Envoyer ma demande</span>
                                 <iconify-icon icon="solar:plain-2-bold-duotone" class="fs-5"></iconify-icon>
                             </button>
