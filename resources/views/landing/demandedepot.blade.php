@@ -19,28 +19,69 @@
                         <p class="mb-0 text-dark text-opacity-75">Vackess Cash - 1xBet</p>
                     </div>
                     
-                    <div class="card-body p-4 p-lg-5" id="form-container">
-                        <p class="text-center mb-4 text-muted">Veuillez renseigner votre identifiant 1xBet et le montant du dépôt souhaité.</p>
+                    <!-- Step 1: Platform Selection -->
+                    <div class="card-body p-4 p-lg-5" id="selection-container">
+                        <h4 class="text-center mb-4 fw-bold">Sélectionnez votre plateforme</h4>
+                        <div class="d-flex flex-column gap-3">
+                            <!-- 1xBet -->
+                            <div class="platform-card p-3 rounded-4 border-2 border d-flex align-items-center gap-3 cursor-pointer transition-all" onclick="selectPlatform('1xBet')">
+                                <div class="round-48 bg-primary bg-opacity-10 text-primary rounded-circle hstack justify-content-center flex-shrink-0">
+                                    <iconify-icon icon="simple-icons:1xbet" class="fs-7"></iconify-icon>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-0 fw-bold">1xBet</h5>
+                                    <p class="mb-0 small text-muted">Dépôt instantané & sécurisé</p>
+                                </div>
+                                <iconify-icon icon="solar:alt-arrow-right-bold-duotone" class="fs-6 text-muted"></iconify-icon>
+                            </div>
+
+                            <!-- Betwinner -->
+                            <div class="platform-card p-3 rounded-4 border-2 border d-flex align-items-center gap-3 cursor-pointer transition-all" onclick="selectPlatform('Betwinner')">
+                                <div class="round-48 bg-success bg-opacity-10 text-success rounded-circle hstack justify-content-center flex-shrink-0">
+                                    <iconify-icon icon="simple-icons:betwinner" class="fs-7"></iconify-icon>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-0 fw-bold">Betwinner</h5>
+                                    <p class="mb-0 small text-muted">Rapide et sans frais</p>
+                                </div>
+                                <iconify-icon icon="solar:alt-arrow-right-bold-duotone" class="fs-6 text-muted"></iconify-icon>
+                            </div>
+
+                            <!-- Melbet -->
+                            <div class="platform-card p-3 rounded-4 border-2 border d-flex align-items-center gap-3 cursor-pointer transition-all" onclick="selectPlatform('Melbet')">
+                                <div class="round-48 bg-warning bg-opacity-10 text-warning rounded-circle hstack justify-content-center flex-shrink-0">
+                                    <iconify-icon icon="simple-icons:melbet" class="fs-7"></iconify-icon>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-0 fw-bold">Melbet</h5>
+                                    <p class="mb-0 small text-muted">Service disponible 24h/24</p>
+                                </div>
+                                <iconify-icon icon="solar:alt-arrow-right-bold-duotone" class="fs-6 text-muted"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Form (Hidden by default) -->
+                    <div class="card-body p-4 p-lg-5 d-none" id="form-container">
+                        <button class="btn btn-link text-decoration-none text-muted p-0 mb-4 hstack gap-2" onclick="showSelection()">
+                            <iconify-icon icon="solar:arrow-left-outline"></iconify-icon>
+                            <span class="small fw-bold">Changer de plateforme</span>
+                        </button>
+
+                        <div class="text-center mb-4">
+                            <h4 class="fw-bold" id="selected-platform-name">1xBet</h4>
+                            <p class="text-muted small">Veuillez renseigner vos informations de dépôt.</p>
+                        </div>
                         
                         <form id="depotForm" class="d-flex flex-column gap-4">
                             @csrf
-                            <div class="form-group">
-                                <label for="plateforme" class="form-label fw-bold text-dark">Plateforme</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-0"><iconify-icon icon="solar:globus-bold-duotone"></iconify-icon></span>
-                                    <select class="form-select border-0 bg-light p-3" id="plateforme" name="plateforme" required>
-                                        <option value="1xBet" selected>1xBet</option>
-                                        <option value="Betwinner">Betwinner</option>
-                                        <option value="Melbet">Melbet</option>
-                                    </select>
-                                </div>
-                            </div>
-
+                            <input type="hidden" name="plateforme" id="plateforme_input" value="1xBet">
+                            
                             <div class="form-group">
                                 <label for="identifiant" class="form-label fw-bold text-dark">Identifiant Joueur</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-0"><iconify-icon icon="solar:user-id-bold-duotone"></iconify-icon></span>
-                                    <input type="text" class="form-control border-0 bg-light p-3" id="identifiant" name="identifiant" placeholder="Ex: 45678912" required>
+                                    <input type="text" class="form-control border-0 bg-light p-3" id="identifiant" name="identifiant" placeholder="Saisissez votre ID" required>
                                 </div>
                             </div>
 
@@ -102,19 +143,45 @@
 <style>
     .round-80 { width: 80px; height: 80px; }
     .round-64 { width: 64px; height: 64px; }
+    .round-48 { width: 48px; height: 48px; }
+    .fs-7 { font-size: 1.5rem; }
     .fs-13 { font-size: 4rem; }
     .input-group-text { border-radius: 0.75rem 0 0 0.75rem !important; }
     .form-control { border-radius: 0 0.75rem 0.75rem 0 !important; }
     .bg-light { background-color: #f8f9fa !important; }
+    .cursor-pointer { cursor: pointer; }
+    .transition-all { transition: all 0.3s ease; }
+    
+    .platform-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--bs-primary) !important;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
     .demande-depot-section {
         background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
     }
 </style>
 
 <script>
+function selectPlatform(name) {
+    document.getElementById('selected-platform-name').innerText = name;
+    document.getElementById('plateforme_input').value = name;
+    document.getElementById('selection-container').classList.add('d-none');
+    document.getElementById('form-container').classList.remove('d-none');
+    if (window.AOS) AOS.refresh();
+}
+
+function showSelection() {
+    document.getElementById('form-container').classList.add('d-none');
+    document.getElementById('selection-container').classList.remove('d-none');
+    if (window.AOS) AOS.refresh();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('depotForm');
     const formContainer = document.getElementById('form-container');
+    const selectionContainer = document.getElementById('selection-container');
     const loaderContainer = document.getElementById('loader-container');
     const successContainer = document.getElementById('success-container');
 
@@ -123,6 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const isSuccess = urlParams.get('payment_status') === 'success' || "{{ $payment_status ?? '' }}" === 'success';
 
     if (isSuccess) {
+        selectionContainer.classList.add('d-none');
         formContainer.classList.add('d-none');
         loaderContainer.classList.add('d-none');
         successContainer.classList.remove('d-none');
