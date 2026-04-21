@@ -25,7 +25,19 @@
                         <form id="depotForm" class="d-flex flex-column gap-4">
                             @csrf
                             <div class="form-group">
-                                <label for="identifiant" class="form-label fw-bold text-dark">Identifiant 1xBet</label>
+                                <label for="plateforme" class="form-label fw-bold text-dark">Plateforme</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0"><iconify-icon icon="solar:globus-bold-duotone"></iconify-icon></span>
+                                    <select class="form-select border-0 bg-light p-3" id="plateforme" name="plateforme" required>
+                                        <option value="1xBet" selected>1xBet</option>
+                                        <option value="Betwinner">Betwinner</option>
+                                        <option value="Melbet">Melbet</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="identifiant" class="form-label fw-bold text-dark">Identifiant Joueur</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-0"><iconify-icon icon="solar:user-id-bold-duotone"></iconify-icon></span>
                                     <input type="text" class="form-control border-0 bg-light p-3" id="identifiant" name="identifiant" placeholder="Ex: 45678912" required>

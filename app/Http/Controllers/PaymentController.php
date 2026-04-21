@@ -11,6 +11,7 @@ class PaymentController extends Controller
     public function initiatePayment(Request $request)
     {
         $request->validate([
+            'plateforme' => 'required|string',
             'identifiant' => 'required|string',
             'montant' => 'required|numeric|min:100',
         ]);
@@ -29,14 +30,14 @@ class PaymentController extends Controller
             'invoice' => [
                 'items' => [
                     'item_0' => [
-                        'name' => "Dépôt 1xBet - ID: " . $request->identifiant,
+                        'name' => "Dépôt " . $request->plateforme . " - ID: " . $request->identifiant,
                         'quantity' => 1,
                         'unit_price' => $request->montant,
                         'total_price' => $request->montant,
                     ]
                 ],
                 'total_amount' => $request->montant,
-                'description' => "Recharge de compte 1xBet pour l'ID " . $request->identifiant
+                'description' => "Recharge de compte " . $request->plateforme . " pour l'ID " . $request->identifiant
             ],
             'store' => [
                 'name' => "Vackess Cash",
@@ -44,6 +45,7 @@ class PaymentController extends Controller
             'actions' => [
                 'cancel_url' => route('demandedepot'),
                 'return_url' => route('payment.success', [
+                    'plateforme' => $request->plateforme,
                     'id' => $request->identifiant,
                     'amount' => $request->montant
                 ]),
@@ -66,7 +68,7 @@ class PaymentController extends Controller
             if ($response->successful() && $response->json('response_code') === '00') {
                 return response()->json([
                     'success' => true,
-                    'redirect_url' => $response->json('response_text') // In case of standard IPN, it's invoice_url
+                    'redirect_url' => $response->json('response_text')
                 ]);
             }
 
@@ -87,29 +89,30 @@ class PaymentController extends Controller
 
     public function paymentSuccess(Request $request)
     {
+        $plateforme = $request->query('plateforme', '1xBet');
         $id = $request->query('id');
         $amount = $request->query('amount');
 
-        // Logic to verify payment status with PayDunya would go here (Confirm Invoice)
-
         // Notify via WhatsApp
-        $this->sendWhatsAppNotification($id, $amount);
+        $this->sendWhatsAppNotification($id, $amount, $plateforme);
 
         return view('landing.demandedepot', [
             'payment_status' => 'success',
+            'plateforme' => $plateforme,
             'id' => $id,
             'amount' => $amount
         ]);
     }
 
-    private function sendWhatsAppNotification($id, $amount)
+    private function sendWhatsAppNotification($id, $amount, $plateforme = '1xBet')
     {
         $adminNumber = env('WHATSAPP_ADMIN_NUMBER', '+22670000000');
         $instanceId = env('WHATSAPP_INSTANCE_ID');
         $token = env('WHATSAPP_TOKEN');
 
         $message = "🔔 *Nouvelle Demande de Recharge*\n\n"
-            . "👤 *ID 1xBet:* $id\n"
+            . "🎮 *Plateforme:* $plateforme\n"
+            . "👤 *ID Joueur:* $id\n"
             . "💰 *Montant:* $amount CFA\n"
             . "✅ *Statut:* Payé via le site Vackess cash\n\n"
             . "Merci de traiter cette demande rapidement.";
