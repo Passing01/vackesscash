@@ -32,7 +32,7 @@
                                     onclick="selectPlatform('1xBet')">
                                     <div
                                         class="round-48 bg-primary bg-opacity-10 text-primary rounded-circle hstack justify-content-center flex-shrink-0">
-                                        <img src="{{ asset('assets/images/bet/1xbet.webp') }}" class="img-fluid" alt="">
+                                        <img src="{{ asset('assets/images/vackess/1xbet.webp') }}" class="img-fluid" alt="">
                                     </div>
                                     <div class="flex-grow-1">
                                         <h5 class="mb-0 fw-bold">1xBet</h5>
@@ -47,7 +47,8 @@
                                     onclick="selectPlatform('Betwinner')">
                                     <div
                                         class="round-48 bg-success bg-opacity-10 text-success rounded-circle hstack justify-content-center flex-shrink-0">
-                                        <img src="{{ asset('assets/images/bet/betwinner.webp') }}" class="img-fluid" alt="">
+                                        <img src="{{ asset('assets/images/vackess/betwinner.png') }}" class="img-fluid"
+                                            alt="">
                                     </div>
                                     <div class="flex-grow-1">
                                         <h5 class="mb-0 fw-bold">Betwinner</h5>
@@ -62,7 +63,8 @@
                                     onclick="selectPlatform('Melbet')">
                                     <div
                                         class="round-48 bg-warning bg-opacity-10 text-warning rounded-circle hstack justify-content-center flex-shrink-0">
-                                        <img src="{{ asset('assets/images/bet/melbet.webp') }}" class="img-fluid" alt="">
+                                        <img src="{{ asset('assets/images/vackess/melbet.webp') }}" class="img-fluid"
+                                            alt="">
                                     </div>
                                     <div class="flex-grow-1">
                                         <h5 class="mb-0 fw-bold">Melbet</h5>
