@@ -113,6 +113,64 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="phone" class="form-label fw-bold text-dark">Numéro de téléphone de paiement</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><iconify-icon
+                                                icon="solar:phone-bold-duotone"></iconify-icon></span>
+                                        <input type="tel" class="form-control border-0 bg-light p-3" id="phone"
+                                            name="phone" placeholder="Ex: +22670123456" required>
+                                    </div>
+                                    <small class="text-muted">Format: +226XXXXXXXX</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label fw-bold text-dark mb-3">Opérateur / Mode de paiement</label>
+                                    <div class="row g-3" id="payment_methods_grid">
+                                        <!-- Orange Money -->
+                                        <div class="col-6">
+                                            <div class="method-card p-3 rounded-4 border-2 border d-flex flex-column align-items-center text-center gap-2 cursor-pointer transition-all h-100"
+                                                onclick="selectMethod('orange_money')">
+                                                <img src="{{ asset('assets/images/vackess/Orange-Money-Burkina-Faso.webp') }}" class="img-fluid rounded-2" style="height: 40px; width: 40px; object-fit: contain;" alt="Orange">
+                                                <span class="small fw-bold">Orange Money</span>
+                                            </div>
+                                        </div>
+                                        <!-- Moov Money -->
+                                        <div class="col-6">
+                                            <div class="method-card p-3 rounded-4 border-2 border d-flex flex-column align-items-center text-center gap-2 cursor-pointer transition-all h-100"
+                                                onclick="selectMethod('moov_money')">
+                                                <img src="{{ asset('assets/images/vackess/moov-money.png') }}" class="img-fluid rounded-2" style="height: 40px; width: 40px; object-fit: contain;" alt="Moov">
+                                                <span class="small fw-bold">Moov Money</span>
+                                            </div>
+                                        </div>
+                                        <!-- Wave -->
+                                        <div class="col-6">
+                                            <div class="method-card p-3 rounded-4 border-2 border d-flex flex-column align-items-center text-center gap-2 cursor-pointer transition-all h-100"
+                                                onclick="selectMethod('wave')">
+                                                <img src="{{ asset('assets/images/vackess/Wave.png') }}" class="img-fluid rounded-2" style="height: 40px; width: 40px; object-fit: contain;" alt="Wave">
+                                                <span class="small fw-bold">Wave</span>
+                                            </div>
+                                        </div>
+                                        <!-- Telecel -->
+                                        <div class="col-6">
+                                            <div class="method-card p-3 rounded-4 border-2 border d-flex flex-column align-items-center text-center gap-2 cursor-pointer transition-all h-100"
+                                                onclick="selectMethod('telecel')">
+                                                <img src="{{ asset('assets/images/vackess/Telecel-money.png') }}" class="img-fluid rounded-2" style="height: 40px; width: 40px; object-fit: contain;" alt="Telecel">
+                                                <span class="small fw-bold">Telecel Money</span>
+                                            </div>
+                                        </div>
+                                        <!-- Card -->
+                                        <div class="col-12">
+                                            <div class="method-card p-3 rounded-4 border-2 border d-flex align-items-center justify-content-center gap-3 cursor-pointer transition-all"
+                                                onclick="selectMethod('card')">
+                                                <img src="{{ asset('assets/images/vackess/visa.webp') }}" class="img-fluid rounded-2" style="height: 30px; object-fit: contain;" alt="Visa/Mastercard">
+                                                <span class="small fw-bold">Carte Bancaire (Visa / Mastercard)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="payment_method" id="payment_method_input" required>
+                                </div>
+
                                 <button type="submit"
                                     class="btn btn-dark w-100 py-3 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-2"
                                     style="color: #ffffff !important; font-weight: 700 !important;">
@@ -132,6 +190,64 @@
                                 <h4 class="mb-0 fw-bold">Traitement en cours...</h4>
                                 <p class="text-muted">Nous préparons votre demande, merci de patienter.</p>
                             </div>
+                        </div>
+
+                        <!-- Manual Payment Instructions & Proof (Hidden by default) -->
+                        <div class="card-body p-4 p-lg-5 d-none" id="manual-container">
+                            <button class="btn btn-link text-decoration-none text-muted p-0 mb-4 hstack gap-2"
+                                onclick="showForm()">
+                                <iconify-icon icon="solar:arrow-left-outline"></iconify-icon>
+                                <span class="small fw-bold">Modifier les informations</span>
+                            </button>
+
+                            <div class="text-center mb-4">
+                                <div class="mb-3">
+                                    <img src="" id="manual-operator-logo" class="img-fluid rounded-4 shadow-sm p-2 bg-white" style="height: 100px; min-width: 100px; object-fit: contain; border: 1px solid #eee;">
+                                </div>
+                                <h4 class="fw-bold">Finalisez votre paiement</h4>
+                                <p class="text-muted small">Suivez les instructions ci-dessous pour effectuer le paiement.</p>
+                            </div>
+
+                            <div class="bg-primary bg-opacity-10 p-4 rounded-4 mb-4 text-center border border-primary border-opacity-25">
+                                <p class="mb-2 fw-bold text-primary">Code à composer sur votre téléphone :</p>
+                                <div class="d-flex align-items-center justify-content-center gap-2 flex-wrap">
+                                    <h3 class="mb-0 fw-bolder text-primary text-break" id="manual-dial-code" style="letter-spacing: 1px;">*144*...#</h3>
+                                    <button class="btn btn-sm btn-primary rounded-circle flex-shrink-0" onclick="copyDialCode()">
+                                        <iconify-icon icon="solar:copy-bold-duotone"></iconify-icon>
+                                    </button>
+                                </div>
+                                <p class="mt-2 mb-0 small text-dark">Montant exact : <span class="fw-bold" id="manual-amount-display">0</span> CFA</p>
+                            </div>
+
+                            <form id="manualForm" class="d-flex flex-column gap-3" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="plateforme" id="manual_plateforme">
+                                <input type="hidden" name="identifiant" id="manual_identifiant">
+                                <input type="hidden" name="montant" id="manual_montant">
+                                <input type="hidden" name="phone" id="manual_phone">
+                                <input type="hidden" name="payment_method" id="manual_method">
+
+                                <div class="form-group">
+                                    <label for="transaction_id" class="form-label fw-bold text-dark" id="transaction_id_label">ID de Transaction</label>
+                                    <input type="text" class="form-control border-0 bg-light p-3" id="transaction_id"
+                                        name="transaction_id" placeholder="Saisissez le code de référence" required>
+                                    <small class="text-muted" id="transaction_id_help">Le code reçu par SMS après le paiement.</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="proof_image" class="form-label fw-bold text-dark">Capture d'écran (Preuve)</label>
+                                    <input type="file" class="form-control border-0 bg-light p-3" id="proof_image"
+                                        name="proof_image" accept="image/*" required>
+                                    <small class="text-muted">Capture d'écran de la confirmation de paiement.</small>
+                                </div>
+
+                                <button type="submit"
+                                    class="btn btn-primary w-100 py-3 rounded-pill d-flex align-items-center justify-content-center gap-2 mt-2"
+                                    style="color: #ffffff !important; font-weight: 700 !important;">
+                                    Confirmer mon paiement
+                                    <iconify-icon icon="solar:check-read-bold-duotone" class="fs-5"></iconify-icon>
+                                </button>
+                            </form>
                         </div>
 
                         <!-- Success Message (Hidden by default) -->
@@ -218,8 +334,29 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
         }
 
+        .method-card {
+            border-color: #eee !important;
+            background: #fff;
+        }
+
+        .method-card:hover {
+            border-color: var(--bs-primary) !important;
+            background: rgba(var(--bs-primary-rgb), 0.02);
+        }
+
+        .method-card.selected {
+            border-color: var(--bs-primary) !important;
+            background: rgba(var(--bs-primary-rgb), 0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
         .demande-depot-section {
             background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        }
+        
+        .text-break {
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
         }
     </style>
 
@@ -234,8 +371,33 @@
 
         function showSelection() {
             document.getElementById('form-container').classList.add('d-none');
+            document.getElementById('manual-container').classList.add('d-none');
             document.getElementById('selection-container').classList.remove('d-none');
             if (window.AOS) AOS.refresh();
+        }
+
+        function showForm() {
+            document.getElementById('manual-container').classList.add('d-none');
+            document.getElementById('form-container').classList.remove('d-none');
+            if (window.AOS) AOS.refresh();
+        }
+
+        function selectMethod(method) {
+            // Update hidden input
+            document.getElementById('payment_method_input').value = method;
+            
+            // Update UI
+            document.querySelectorAll('.method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        function copyDialCode() {
+            const code = document.getElementById('manual-dial-code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Code copié !');
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -277,9 +439,58 @@
                     })
                         .then(response => response.json())
                         .then(data => {
-                            if (data.success && data.redirect_url) {
-                                // Redirect to PayDunya checkout
-                                window.location.href = data.redirect_url;
+                            if (data.success) {
+                                if (data.manual) {
+                                    // Handle Manual Flow
+                                    loaderContainer.classList.add('d-none');
+                                    document.getElementById('manual-container').classList.remove('d-none');
+                                    
+                                    // Fill hidden fields
+                                    document.getElementById('manual_plateforme').value = formData.get('plateforme');
+                                    document.getElementById('manual_identifiant').value = formData.get('identifiant');
+                                    document.getElementById('manual_montant').value = formData.get('montant');
+                                    document.getElementById('manual_phone').value = formData.get('phone');
+                                    document.getElementById('manual_method').value = data.method;
+                                    
+                                    document.getElementById('manual-amount-display').innerText = formData.get('montant');
+                                    
+                                    // Set Dial Code based on method
+                                    let code = "*144*...#";
+                                    let label = "ID de Transaction";
+                                    let placeholder = "Saisissez le code de référence";
+                                    let logo = "";
+                                    const amount = formData.get('montant');
+                                    
+                                    if (data.method === 'orange_money') {
+                                        code = `*144*2*1*44333323*${amount}#`;
+                                        label = "ID Transaction Orange Money";
+                                        placeholder = "Ex: OM123456789";
+                                        logo = "{{ asset('assets/images/vackess/Orange-Money-Burkina-Faso.webp') }}";
+                                    } else if (data.method === 'moov_money') {
+                                        code = `*555*2*1*60486678*${amount}#`;
+                                        label = "ID Transaction Moov Money";
+                                        placeholder = "Ex: MOOV123456";
+                                        logo = "{{ asset('assets/images/vackess/moov-money.png') }}";
+                                    } else if (data.method === 'telecel') {
+                                        code = `*808*2*1*78397293*${amount}#`;
+                                        label = "ID Transaction Telecel Cash";
+                                        placeholder = "Ex: TEL123456";
+                                        logo = "{{ asset('assets/images/vackess/Telecel-money.png') }}";
+                                    }
+                                    
+                                    document.getElementById('manual-dial-code').innerText = code;
+                                    document.getElementById('transaction_id_label').innerText = label;
+                                    document.getElementById('transaction_id').placeholder = placeholder;
+                                    document.getElementById('manual-operator-logo').src = logo;
+                                    
+                                    if (window.AOS) AOS.refresh();
+                                } else if (data.redirect_url) {
+                                    window.location.href = data.redirect_url;
+                                } else {
+                                    loaderContainer.classList.add('d-none');
+                                    successContainer.classList.remove('d-none');
+                                    if (window.AOS) AOS.refresh();
+                                }
                             } else {
                                 alert(data.message || 'Une erreur est survenue lors de l\'initiation du paiement.');
                                 formContainer.classList.remove('d-none');
@@ -292,6 +503,44 @@
                             formContainer.classList.remove('d-none');
                             loaderContainer.classList.add('d-none');
                         });
+                });
+            }
+
+            const manualForm = document.getElementById('manualForm');
+            if (manualForm) {
+                manualForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(manualForm);
+                    
+                    document.getElementById('manual-container').classList.add('d-none');
+                    loaderContainer.classList.remove('d-none');
+                    
+                    fetch("{{ route('payment.manual') }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                            'Accept': 'application/json',
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        loaderContainer.classList.add('d-none');
+                        if (data.success) {
+                            successContainer.classList.remove('d-none');
+                            if (window.AOS) AOS.refresh();
+                        } else {
+                            alert(data.message || 'Une erreur est survenue.');
+                            document.getElementById('manual-container').classList.remove('d-none');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Une erreur technique est survenue.');
+                        loaderContainer.classList.add('d-none');
+                        document.getElementById('manual-container').classList.remove('d-none');
+                    });
                 });
             }
         });

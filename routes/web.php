@@ -11,6 +11,7 @@ Route::get('/demandedepot', function () {
 })->name('demandedepot');
 
 Route::post('/payment/initiate', [App\Http\Controllers\PaymentController::class, 'initiatePayment'])->name('payment.initiate');
+Route::post('/payment/manual', [App\Http\Controllers\PaymentController::class, 'submitManualPayment'])->name('payment.manual');
 Route::get('/payment/success', [App\Http\Controllers\PaymentController::class, 'paymentSuccess'])->name('payment.success');
 
 // Route Webhook PayDunya (Doit ignorer la vérification CSRF car appelé par le serveur PayDunya)
