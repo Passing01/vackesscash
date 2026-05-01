@@ -125,7 +125,6 @@ class PaymentController extends Controller
             'montant' => 'required|numeric',
             'phone' => 'required|string',
             'payment_method' => 'required|string',
-            'transaction_id' => 'required|string',
             'proof_image' => 'required|image|max:5120', // 5MB max
         ]);
 
@@ -144,7 +143,7 @@ class PaymentController extends Controller
                 $request->identifiant,
                 $request->montant,
                 $request->plateforme,
-                $request->transaction_id,
+                null, // No transaction_id anymore
                 $imagePath,
                 $request->phone,
                 $request->payment_method
@@ -196,7 +195,7 @@ class PaymentController extends Controller
         $instanceId = env('WHATSAPP_INSTANCE_ID');
         $token = env('WHATSAPP_TOKEN');
 
-        $type = $transactionId ? "Manuelle" : "GeniusPay";
+        $type = $imagePath ? "Manuelle (avec preuve)" : "GeniusPay";
         $methodNames = [
             'orange_money' => 'Orange Money',
             'moov_money'   => 'Moov Money',

@@ -228,17 +228,10 @@
                                 <input type="hidden" name="payment_method" id="manual_method">
 
                                 <div class="form-group">
-                                    <label for="transaction_id" class="form-label fw-bold text-dark" id="transaction_id_label">ID de Transaction</label>
-                                    <input type="text" class="form-control border-0 bg-light p-3" id="transaction_id"
-                                        name="transaction_id" placeholder="Saisissez le code de référence" required>
-                                    <small class="text-muted" id="transaction_id_help">Le code reçu par SMS après le paiement.</small>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="proof_image" class="form-label fw-bold text-dark">Capture d'écran (Preuve)</label>
+                                    <label for="proof_image" class="form-label fw-bold text-dark">Capture d'écran (Preuve de paiement)</label>
                                     <input type="file" class="form-control border-0 bg-light p-3" id="proof_image"
                                         name="proof_image" accept="image/*" required>
-                                    <small class="text-muted">Capture d'écran de la confirmation de paiement.</small>
+                                    <small class="text-muted">Veuillez télécharger une capture d'écran du message de confirmation de paiement.</small>
                                 </div>
 
                                 <button type="submit"
@@ -456,31 +449,21 @@
                                     
                                     // Set Dial Code based on method
                                     let code = "*144*...#";
-                                    let label = "ID de Transaction";
-                                    let placeholder = "Saisissez le code de référence";
                                     let logo = "";
                                     const amount = formData.get('montant');
                                     
                                     if (data.method === 'orange_money') {
                                         code = `*144*2*1*44333323*${amount}#`;
-                                        label = "ID Transaction Orange Money";
-                                        placeholder = "Ex: OM123456789";
                                         logo = "{{ asset('assets/images/vackess/Orange-Money-Burkina-Faso.webp') }}";
                                     } else if (data.method === 'moov_money') {
                                         code = `*555*2*1*60486678*${amount}#`;
-                                        label = "ID Transaction Moov Money";
-                                        placeholder = "Ex: MOOV123456";
                                         logo = "{{ asset('assets/images/vackess/moov-money.png') }}";
                                     } else if (data.method === 'telecel') {
                                         code = `*808*2*1*78397293*${amount}#`;
-                                        label = "ID Transaction Telecel Cash";
-                                        placeholder = "Ex: TEL123456";
                                         logo = "{{ asset('assets/images/vackess/Telecel-money.png') }}";
                                     }
                                     
                                     document.getElementById('manual-dial-code').innerText = code;
-                                    document.getElementById('transaction_id_label').innerText = label;
-                                    document.getElementById('transaction_id').placeholder = placeholder;
                                     document.getElementById('manual-operator-logo').src = logo;
                                     
                                     if (window.AOS) AOS.refresh();
